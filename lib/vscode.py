@@ -24,7 +24,7 @@ def anon_upload(filename):
         error_type = resp['error']['type']
         print(f'[ERROR] {message}\n{error_type}')
 ###################################################
-def code_main(upload):
+def code_main_backup(upload):
     if platform == "linux":
         path = HOME.joinpath('.vscode')
         os.chdir(path)
@@ -40,4 +40,6 @@ def code_main(upload):
         anon_upload('extensions.zip')
     copy2('extensions.zip', desktop_path)
     print("Backup complete,files located in Desktop.")
-code_main(upload=False)
+
+def code_main_restore():
+    pass
