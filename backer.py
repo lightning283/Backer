@@ -19,6 +19,7 @@ try:
                 )
                 code_main_backup(upload=False)
     elif argv[1] == "restore":
-        print("Restore")
+        if argv[2] == "vscode":
+            code_main_restore()
 except IndexError:
     pass
