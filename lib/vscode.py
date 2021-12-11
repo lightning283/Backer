@@ -52,20 +52,21 @@ def code_main_restore():
         path = HOME.joinpath('.vscode')
         copy2(path_finder(), path)
         print('Copying files..')
+        if os.path.isdir(HOME.joinpath('.vscode').joinpath('extensions')):
+            print("Extensions Folder found")
+            usr_inp = input("Would you like to remove and replace the extensions?(y/n) ")
+            if usr_inp.upper() == "Y":
+                os.chdir(HOME.joinpath('.vscode'))
+                rmtree("extensions")
+                restore()
+                quit()
+            else:
+                quit()
         os.chdir(path)
         print('Unzipping files..')
         with zipfile.ZipFile("vscode_extensions.zip","r") as zip_ref:
             zip_ref.extractall("extensions")
         os.remove('vscode_extensions.zip')
         print("Restore done..")
-    if os.path.isdir(HOME.joinpath('.vscode').joinpath('extensions')):
-        print("Extensions Folder found")
-        usr_inp = input("Would you like to remove and replace the extensions?(y/n) ")
-        if usr_inp.upper() == "Y":
-            os.chdir(HOME.joinpath('.vscode'))
-            rmtree("extensions")
-            restore()
-            exit()
-        else:
-            exit()
+
     restore()
