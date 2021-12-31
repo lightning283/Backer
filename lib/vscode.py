@@ -25,11 +25,17 @@ def anon_upload(filename):
         message = resp['error']['message']
         error_type = resp['error']['type']
         print(f'[ERROR] {message}\n{error_type}')
-def path_finder():
+def path_finder(path):
     def dialog():
-        file , check = QFileDialog.getOpenFileName(None, "QFileDialog.getOpenFileName()",
-                                                "", "All Files (*);;Python Files (*.py);;Text Files (*.txt)")
-        return file
+        if path == 'file':
+            file , check = QFileDialog.getOpenFileName(None, "QFileDialog.getOpenFileName()",
+                                                    "", "All Files (*);;Python Files (*.py);;Text Files (*.txt)")
+            return file
+        elif path == 'folder':
+            file = QFileDialog.getExistingDirectory(
+                caption='select folder'
+            )
+            return file
     app = QApplication(argv)
     path = dialog()
     return path
