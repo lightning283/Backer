@@ -56,7 +56,7 @@ def code_main_backup(upload):
 def code_main_restore():
     def restore():
         path = HOME.joinpath('.vscode')
-        copy2(path_finder(), path)
+        copy2(path_finder(path='file'), path)
         print('Copying files..')
         if os.path.isdir(HOME.joinpath('.vscode').joinpath('extensions')):
             print("Extensions Folder found")
