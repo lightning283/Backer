@@ -1,18 +1,49 @@
-from lib.vscode import code_main_backup
-from lib.vscode import code_main_restore
-from colorama import Fore
 from sys import argv
-help_msg = f'''
-{Fore.YELLOW}
-Normal Usage:
-{Fore.BLUE}backer backup 'package name'{Fore.YELLOW}
+import os
+from pathlib import Path
+from shutil import copy2,rmtree,make_archive
+from lib.utils import *
 
-Backup and Upload,Files will be uploaded to {Fore.RED} anonfiles:
-{Fore.BLUE}backer backup 'package name'{Fore.RED} upload
-{Fore.YELLOW}
-Restore:
-{Fore.BLUE}backer restore 'package name'
-'''
+HOME = Path().home()
+desktop_path = Path().home().joinpath('Desktop')
+
+def code_main_backup(upload):
+    path = HOME.joinpath('.vscode')
+    os.chdir(path)
+    print('Zipping Extensions..')
+    make_archive("vscode_extensions", "zip",'extensions')
+    copy2('vscode_extensions.zip', desktop_path)
+    print("Backup complete,files located in Desktop.")
+    if upload == True:
+        print("Uploading files to anon files..")
+        anon_upload('vscode_extensions.zip')
+    print("Cleaning up")
+    os.remove("vscode_extensions.zip")
+
+def code_main_restore():
+    def restore():
+        path = HOME.joinpath('.vscode')
+        copy2(path_finder(path='file'), path)
+        print('Copying files..')
+        if os.path.isdir(HOME.joinpath('.vscode').joinpath('extensions')):
+            print("Extensions Folder found")
+            usr_inp = input("Would you like to remove and replace the extensions?(y/n) ")
+            if usr_inp.upper() == "Y":
+                os.chdir(HOME.joinpath('.vscode'))
+                rmtree("extensions")
+                restore()
+                quit()
+            else:
+                quit()
+        os.chdir(path)
+        print('Unzipping files..')
+        with zipfile.ZipFile("vscode_extensions.zip","r") as zip_ref:
+            zip_ref.extractall("extensions")
+        os.remove('vscode_extensions.zip')
+        print("Restore done..")
+
+    restore()
+####################################################################################################
 try:
     if argv[1] == "backup":
         if argv[2] == "vscode":
