@@ -41,11 +41,18 @@ def code_main_restore():
             zip_ref.extractall("extensions")
         os.remove('vscode_extensions.zip')
         print("Restore done..")
-
     restore()
+def custom_backup():
+    path = path_finder(path='folder')
+    os.chdir(path)
+    with Loader('Compressing files'):
+        make_archive('custom', 'zip','.')
+    with Loader('Copying files'):
+        copy2('custom.zip', desktop_path)
+        os.remove('custom.zip')
 ####################################################################################################
 try:
-    if argv[1] == "backup":
+    if argv[1] == "backup" or argv[1] == '-b':
         if argv[2] == "vscode":
             if "upload" in argv:
                 print(
@@ -61,7 +68,9 @@ try:
                     'UPLOAD = Flase'
                 )
                 code_main_backup(upload=False)
-    elif argv[1] == "restore":
+        elif argv[2] == "custom":
+            custom_backup()
+    elif argv[1] == "restore" or argv[1] == '-r':
         if argv[2] == "vscode":
             code_main_restore()
     else:
